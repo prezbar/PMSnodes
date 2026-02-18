@@ -104,19 +104,11 @@ class LoadBase64Audio:
     FUNCTION = "load"
 
     def load(self, base64_audio):
-        try:
-            # Decode Base64 string to raw bytes
-            audio_bytes = base64.b64decode(base64_audio)
-            audio_buffer = io.BytesIO(audio_bytes)
-            
-            # Load audio using torchaudio
-            waveform, sample_rate = torchaudio.load(audio_buffer)
-            
-            # Convert waveform to expected format
-            audio = {"waveform": waveform.unsqueeze(0), "sample_rate": sample_rate}
-            return (audio, )
-        except Exception as e:
-            return (f"Error decoding Base64 audio: {str(e)}", )
+        audio_bytes = base64.b64decode(base64_audio)
+        audio_buffer = io.BytesIO(audio_bytes)
+        waveform, sample_rate = torchaudio.load(audio_buffer)
+        audio = {"waveform": waveform.unsqueeze(0), "sample_rate": sample_rate}
+        return (audio, )
 
 def create_vorbis_comment_block(comment_dict, last_block):
     vendor_string = b'ComfyUI'
